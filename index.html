@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>WebSocket Test</title>
+</head>
+<body>
+  <h1>WebSocket Client</h1>
+  <div id="timenow"></div>
+  <button id="connectButton">Connect to WebSocket</button>
+  <button id="sendButton" disabled>Send Message</button>
+  <button id="closews" onclick="wsdisconnect()">Close</button>
+  <div id="messages"></div>
+
+  <script>
+    let ws;
+    let tn=new Date();
+    document.getElementById('timenow').innerHTML="time:"+tn.getMinutes();
+    document.getElementById('connectButton').onclick = function() {
+      ws = new WebSocket('ws://localhost:3000/path');
+
+      ws.onopen = function() {
+        document.getElementById('messages').innerHTML += '<p>WebSocket connected</p>';
+        document.getElementById('sendButton').disabled = false;
+      };
+
+      ws.onmessage = function(event) {
+        document.getElementById('messages').innerHTML += '<p>Received: ' + event.data + '</p>';
+      };
+
+      ws.onclose = function() {
+        document.getElementById('messages').innerHTML += '<p>WebSocket disconnected</p>';
+        document.getElementById('sendButton').disabled = true;
+      };
+
+      ws.onerror = function(error) {
+        document.getElementById('messages').innerHTML += '<p>WebSocket error: ' + error.message + '</p>';
+      };
+    };
+    function wsdisconnect()
+    {
+        ws.close
+    }
+    document.getElementById('sendButton').onclick = function() {
+      const message = 'Hello from HTML client';
+      ws.send(message);
+      document.getElementById('messages').innerHTML += '<p>Sent: ' + message + '</p>';
+    };
+  </script>
+</body>
+</html>
